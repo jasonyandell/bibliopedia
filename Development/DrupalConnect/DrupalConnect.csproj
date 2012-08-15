@@ -99,7 +99,15 @@
     </Compile>
     <Compile Include="BasicSteps.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="Commands\CreateNode.cs" />
+    <Compile Include="Commands\IDrupalCommand.cs" />
     <Compile Include="DrupalConnector.cs" />
+    <Compile Include="DrupalContentCRUD.feature.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DrupalContentCRUD.feature</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CreateNodeModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -107,6 +115,10 @@
     <None Include="Basic.feature">
       <Generator>SpecFlowSingleFileGenerator</Generator>
       <LastGenOutput>Basic.feature.cs</LastGenOutput>
+    </None>
+    <None Include="DrupalContentCRUD.feature">
+      <Generator>SpecFlowSingleFileGenerator</Generator>
+      <LastGenOutput>DrupalContentCRUD.feature.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
   </ItemGroup>

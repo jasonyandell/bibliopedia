@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DrupalConnect.Commands;
 using Newtonsoft.Json.Linq;
 using TechTalk.SpecFlow;
 using NUnit.Framework;
@@ -53,13 +54,13 @@ namespace DrupalConnect
             this.result = connector.GetNode("224");
         }
 
-        [When("I authenticate with bibliopedia")]
-        public void WhenIAuthenticateWithBibliopedia()
-        {
-            //TODO: implement act (action) logic
+        //[When("I authenticate with bibliopedia")]
+        //public void WhenIAuthenticateWithBibliopedia()
+        //{
+        //    //TODO: implement act (action) logic
 
-            ScenarioContext.Current.Pending();
-        }
+        //    ScenarioContext.Current.Pending();
+        //}
 
         //[Then("")]
         //public void Then()
@@ -68,10 +69,31 @@ namespace DrupalConnect
 
         //    ScenarioContext.Current.Pending();
         //}
+
+
+
+        [When("I createa a new test node")]
+        public void WhenICreateANewTestNode()
+        {
+            var connection = ScenarioContext.Current.Get<DrupalConnector>();
+
+            var command = new CreateNode();
+
+            command.Execute();
+
+        }
+
+
+
         [Then("I get some data back")]
         public void ThenIGetSomeDataBack()
         {
             Assert.IsTrue(result != null, "Result was empty");
         }
+
+        When I create a new test node
+	Then I can determine that it succeeded
+
+
     }
 }

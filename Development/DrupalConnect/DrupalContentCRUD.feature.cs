@@ -19,21 +19,21 @@ namespace DrupalConnect
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "1.8.1.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [NUnit.Framework.TestFixtureAttribute()]
-    [NUnit.Framework.DescriptionAttribute("Drupal")]
-    public partial class DrupalFeature
+    [NUnit.Framework.DescriptionAttribute("Drupal create read update delete")]
+    public partial class DrupalCreateReadUpdateDeleteFeature
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
         
-#line 1 "Basic.feature"
+#line 1 "DrupalContentCRUD.feature"
 #line hidden
         
         [NUnit.Framework.TestFixtureSetUpAttribute()]
         public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Drupal", "In connect to Drupal\r\nAs a bot\r\nI want to be able to connect\r\nAnd I want to be ab" +
-                    "le to perform basic GET on a Node", ProgrammingLanguage.CSharp, ((string[])(null)));
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Drupal create read update delete", "In order to work with data in Drupal\r\nAs a bot\r\nI want to be able to perform basi" +
+                    "c operations", ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -65,21 +65,31 @@ namespace DrupalConnect
             testRunner.CollectScenarioErrors();
         }
         
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Connect")]
-        public virtual void Connect()
+        public virtual void FeatureBackground()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Connect", ((string[])(null)));
+#line 6
 #line 7
-this.ScenarioSetup(scenarioInfo);
+ testRunner.Given("credentials");
 #line 8
- testRunner.Given("a connection");
-#line 9
- testRunner.And("credentials");
+ testRunner.And("a connection");
+#line hidden
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Create")]
+        public virtual void Create()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Create", ((string[])(null)));
 #line 10
- testRunner.When("I can perform a basic get");
+this.ScenarioSetup(scenarioInfo);
+#line 6
+this.FeatureBackground();
 #line 11
- testRunner.Then("I get some data back");
+ testRunner.When("I create a new test node");
+#line 12
+ testRunner.Then("I can determine that it succeeded");
+#line 13
+ testRunner.And("I get some data back");
 #line hidden
             this.ScenarioCleanup();
         }
