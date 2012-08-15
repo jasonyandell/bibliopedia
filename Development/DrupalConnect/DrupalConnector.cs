@@ -20,15 +20,20 @@ namespace DrupalConnect
 
     public class DrupalConnector
     {
+        private static string NOT_INITIALIZED = Guid.NewGuid().ToString();
+
         private NetworkCredential credential;
         private WebClient client;
-        private string sessionId;
+        private string _sessionId;
+        private string _session_name;
 
         public DrupalConnector()
         {
             this.credential = new NetworkCredential();
             this.client = new WebClient();
             client.Credentials = credential;
+            _sessionId = NOT_INITIALIZED;
+            _session_name = NOT_INITIALIZED;
         }
 
         private string Domain { get { return "http://bibliopedia.org/crawled_data"; } }
@@ -41,18 +46,22 @@ namespace DrupalConnect
             client.UseDefaultCredentials = false;
         }
 
-        public string Data(Uri uri, string method, string postData = null)
+        public JObject Data(Uri uri, string method, string postData = null)
         {
-            var request = WebRequest.Create(uri);
+            var request = HttpWebRequest.Create(uri);
             request.Credentials = this.credential;
 
             request.ContentType = "application/json";
             request.Method = method;
+            if (_sessionId != NOT_INITIALIZED)
+            {
+                request.Headers.Add("sessid",_sessionId);
+            }
 
             var encoding = new ASCIIEncoding();
             if (postData != null)
             {
-                var encodedPostData = postData;//HttpUtility.UrlEncode(postData);
+                var encodedPostData = postData;
                 byte[] byte1 = encoding.GetBytes(encodedPostData);
                 request.ContentLength = encodedPostData.Length;
                 var newStream = request.GetRequestStream();
@@ -60,20 +69,36 @@ namespace DrupalConnect
                 newStream.Close();
             }
 
-            var response = request.GetResponse();
-            var buffer = new byte[2048];
-            response.GetResponseStream().Read(buffer, 0, 2048);
-            var responseText = new String(encoding.GetChars(buffer));
+            //var response = request.GetResponse();
+            //var responseStream = response.GetResponseStream();
 
-            return responseText;
+            var response = request.GetResponse();
+            byte[] buffer;
+            var responseStream = response.GetResponseStream();
+            if (responseStream == null) throw new HttpRequestValidationException("Request generated null response");
+
+            var thisBlock = "";
+            var responseText = "";
+            buffer = new byte[2048];
+            while (responseStream.Read(buffer, 0, 2048) > 0)
+            {
+                thisBlock = new String(encoding.GetChars(buffer));
+                responseText += thisBlock;
+                buffer = new byte[2048];
+            }
+            responseText = responseText.Substring(responseText.IndexOf('{'));
+
+            var jobj = JObject.Parse(responseText);
+
+            return jobj;
         }
 
-        public string Get(Uri uri)
+        public JObject Get(Uri uri)
         {
             return Data(uri, "GET");
         }
 
-        public string Post(Uri uri, string postData)
+        public JObject Post(Uri uri, string postData)
         {
             return Data(uri, "POST", postData);
         }
@@ -82,13 +107,7 @@ namespace DrupalConnect
         {
             var uri = new Uri(Domain+"/system/connect");
 
-            var response = Post(uri, "bot_establishing=true");
-            response = response.Substring(6);
-            //var serializer = new Newtonsoft.Json.JsonSerializer();
-            //var reader = new StringReader(response);
-            //var jsonReader = new JsonTextReader(reader);
-            //var result = serializer.Deserialize(jsonReader);
-            var result = JObject.Parse(response);
+            var result = Post(uri, "bot_establishing=true");
             var sessid = result["sessid"];
             var sessid_typed = sessid.ToObject<string>();
             return sessid_typed;
@@ -96,21 +115,28 @@ namespace DrupalConnect
 
         public string Login()
         {
+            if (_sessionId != NOT_INITIALIZED) return _sessionId;
+
             var q = "\"";
             var uri = new Uri(Domain + "/user/login");
-            var postString = "{" + q + "name" + q + ":" + q + this.credential.UserName + q;
+            var postString = "{" + q + "username" + q + ":" + q + this.credential.UserName + q;
             postString += "," + q + "password" + q + ":" + q + this.credential.Password + q;
             postString += "}";
-            var response = Post(uri, postString);
-            return response;
+            var result = Post(uri, postString);
+
+            this._sessionId = result["sessid"].ToString();
+            this._session_name = result["session_name"].ToString();
+
+            return _sessionId;
         }
 
-        public string GetNode(string nid)
+        public JObject GetNode(string nid)
         {
             Login();
 
             var uri = new Uri("http://bibliopedia.org/crawled_data/node/{0}.jsonp".FormatX(nid));
-            return client.DownloadString(uri);
+            var result = Get(uri);
+            return result;
         }
     }
 }

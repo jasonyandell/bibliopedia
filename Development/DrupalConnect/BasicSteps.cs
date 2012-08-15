@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json.Linq;
 using TechTalk.SpecFlow;
 using NUnit.Framework;
 
@@ -12,7 +13,7 @@ namespace DrupalConnect
     {
         private string nid;
         private DrupalConnector connector;
-        private string result;
+        private JObject result;
 
         [Given("a connection")]
         public void GivenAConnection()
@@ -70,7 +71,7 @@ namespace DrupalConnect
         [Then("I get some data back")]
         public void ThenIGetSomeDataBack()
         {
-            Assert.IsTrue(result != "", "Result was empty");
+            Assert.IsTrue(result != null, "Result was empty");
         }
     }
 }
