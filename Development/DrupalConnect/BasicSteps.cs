@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Management.Instrumentation;
 using System.Text;
 using DrupalConnect.Commands;
+using DrupalConnect.Models;
 using Newtonsoft.Json.Linq;
 using TechTalk.SpecFlow;
 using NUnit.Framework;
@@ -20,6 +21,7 @@ namespace DrupalConnect
         public void GivenAConnection()
         {
             this.connector = new DrupalConnector();
+            Set(connector);
         }
 
         [Given("the node (.*)")]
@@ -70,29 +72,41 @@ namespace DrupalConnect
         //    ScenarioContext.Current.Pending();
         //}
 
-
-
-        [When("I createa a new test node")]
-        public void WhenICreateANewTestNode()
+        private void Set<T>(T item)
         {
-            var connection = ScenarioContext.Current.Get<DrupalConnector>();
-
-            var command = new CreateNode();
-
-            command.Execute();
-
+            ScenarioContext.Current.Set(item);
         }
 
+        private T Get<T>()
+        {
+            T value;
+            var success = ScenarioContext.Current.TryGetValue(out value);
+            if (success) return value;
+            throw new InstanceNotFoundException(typeof (T).FullName);
+        }
 
+        [Given(@"sample data")]
+        public void GivenSampleData()
+        {
+            Set(TestMother.TestNode);
+        }
+
+        [Then(@"I can create a new node")]
+        public void ThenICanCreateANewNode()
+        {
+            var connection = Get<DrupalConnector>();
+
+            var command = new CreateNode(connection, Get<CreateNodeModel>());
+            Set(command);
+
+            command.Execute();
+        }
 
         [Then("I get some data back")]
         public void ThenIGetSomeDataBack()
         {
             Assert.IsTrue(result != null, "Result was empty");
         }
-
-        When I create a new test node
-	Then I can determine that it succeeded
 
 
     }

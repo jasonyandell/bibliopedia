@@ -83,6 +83,23 @@ this.ScenarioSetup(scenarioInfo);
 #line hidden
             this.ScenarioCleanup();
         }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Create a test item")]
+        public virtual void CreateATestItem()
+        {
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Create a test item", ((string[])(null)));
+#line 13
+this.ScenarioSetup(scenarioInfo);
+#line 14
+ testRunner.Given("sample data");
+#line 15
+ testRunner.And("a connection");
+#line 16
+ testRunner.Then("I can create a new node");
+#line hidden
+            this.ScenarioCleanup();
+        }
     }
 }
 #pragma warning restore

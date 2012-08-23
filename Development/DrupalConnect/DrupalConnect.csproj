@@ -99,6 +99,7 @@
     </Compile>
     <Compile Include="BasicSteps.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="Commands\BibliopediaUrls.cs" />
     <Compile Include="Commands\CreateNode.cs" />
     <Compile Include="Commands\IDrupalCommand.cs" />
     <Compile Include="DrupalConnector.cs" />
@@ -108,7 +109,9 @@
       <DependentUpon>DrupalContentCRUD.feature</DependentUpon>
     </Compile>
     <Compile Include="Models\CreateNodeModel.cs" />
+    <Compile Include="Models\DrupalSession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestMother.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

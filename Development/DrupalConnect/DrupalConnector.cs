@@ -77,12 +77,11 @@ namespace DrupalConnect
             var responseStream = response.GetResponseStream();
             if (responseStream == null) throw new HttpRequestValidationException("Request generated null response");
 
-            var thisBlock = "";
             var responseText = "";
             buffer = new byte[2048];
             while (responseStream.Read(buffer, 0, 2048) > 0)
             {
-                thisBlock = new String(encoding.GetChars(buffer));
+                var thisBlock = new String(encoding.GetChars(buffer));
                 responseText += thisBlock;
                 buffer = new byte[2048];
             }
